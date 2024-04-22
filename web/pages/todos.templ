@@ -1,0 +1,30 @@
+package pages
+
+import (
+    "fmt"
+    "todos/entities"
+    "github.com/nicksnyder/go-i18n/v2/i18n"
+)
+
+func showDone(done bool) string {
+    if done {
+        return "✓"
+    } else {
+        return "❏"
+    }
+}
+
+templ Todos(lzr *i18n.Localizer, todos *entities.ToDos) {
+    <table>
+        <tr>
+            <th></th><th>{ localize(lzr,"task") }</th><th></th>
+        </tr>
+    for id, todo := range todos.Iter() {
+        <tr>
+            <td hx-get={ "todos/done/"+ fmt.Sprint(id) } hx-target="#todos" hx-trigger="click">{showDone(todo.Done)}</td>
+            <td>{todo.Task}</td>
+            <td hx-delete={ "todos/"+ fmt.Sprint(id) } hx-target="#todos" hx-trigger="click">🗑️</td>
+        </tr>
+    }
+    </table>
+}

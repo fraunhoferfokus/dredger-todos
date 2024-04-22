@@ -1,0 +1,191 @@
+openapi: 3.1.0
+info:
+  title: ToDo
+  description: This is a ToDo application.
+  version: 0.0.1
+servers:
+  - url: http://localhost:{port}
+    description: Localhost
+    variables:
+      port:
+        default: "8080"
+
+paths:
+  /:
+    get:
+      summary: Returns the index page
+      operationId: Root
+      responses:
+        "200":
+          description: An array of Store objects.
+          content:
+            text/html:
+              schema:
+                type: string
+  /index.html:
+    get:
+      summary: Returns the index page
+      operationId: Index
+      tags:
+        - page
+      responses:
+        "200":
+          description: An array of Store objects.
+          content:
+            text/html:
+              schema:
+                type: string
+  /css/{styleSheet}:
+    get:
+      summary: Returns the a css stylesheet
+      tags:
+        - builtin
+      parameters:
+        - name: styleSheet
+          in: path
+          description: filename of the stylesheet
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The content of the stylesheet
+          content:
+            text/css:
+              schema:
+                type: string
+  /js/{script}:
+    get:
+      summary: Returns the a javascript file
+      tags:
+        - builtin
+      parameters:
+        - name: script
+          in: path
+          description: filename of the javascript file
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The content of the javascript file
+          content:
+            text/javascript:
+              schema:
+                type: string
+  /todos:
+    get:
+      summary: List all todo items.
+      operationId: Todos
+      tags:
+        - page
+      responses:
+        "200":
+          description: Shows a table with all todo items
+          content:
+            text/html:
+              schema:
+                type: string
+  /todos/add:
+    post:
+      summary: List all todo items.
+      operationId: AddTodo
+      responses:
+        "200":
+          description: Shows a table with all todo items
+          content:
+            text/html:
+              schema:
+                type: string
+  /todos/done/{id}:
+    get:
+      summary: Mark todo item as Done.
+      operationId: DoneTodo
+      parameters:
+        - name: id
+          in: path
+          description: id of the todo item.
+          required: true
+          schema:
+            type: number
+            format: integer
+      responses:
+        "200":
+          description: Shows a table with all todo items
+          content:
+            text/html:
+              schema:
+                type: string
+  /todos/{id}:
+    delete:
+      summary: Delete todo item.
+      operationId: DeleteTodo
+      parameters:
+        - name: id
+          in: path
+          description: id of the todo item.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Shows a table with all todo items
+          content:
+            text/html:
+              schema:
+                type: string
+  /livez:
+    get:
+      summary: service is live
+      tags:
+        - builtin
+      responses:
+        "200":
+          description: deliver state
+          content:
+            text/plain:
+              schema:
+                type: string
+  /readyz:
+    get:
+      summary: service is ready
+      tags:
+        - builtin
+      responses:
+        "200":
+          description: deliver state
+          content:
+            text/plain:
+              schema:
+                type: string
+  /infoz:
+    get:
+      summary: all meta information about the service
+      tags:
+        - builtin
+      responses:
+        "200":
+          description: deliver all properties like service name and version
+          content:
+            application/json:
+              schema:
+                type: string
+
+components:
+  schemas:
+    ToDo:
+      type: object
+      properties:
+        Task:
+          type: string
+        Done:
+          type: boolean
+    ToDos:
+      type: object
+      properties:
+        ToDos:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/ToDo"
+        NextId:
+          type: integer
