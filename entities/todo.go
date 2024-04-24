@@ -6,8 +6,8 @@ import (
 )
 
 type ToDo struct {
-	Done bool   `json:"done,omitempty" yaml:"done,omitempty" xml:"done,omitempty"`
 	Task string `json:"task,omitempty" yaml:"task,omitempty" xml:"task,omitempty"`
+	Done bool   `json:"done,omitempty" yaml:"done,omitempty" xml:"done,omitempty"`
 }
 
 func (v *ToDo) Validate() error {
