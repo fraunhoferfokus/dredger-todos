@@ -2,11 +2,9 @@
 package core
 
 import (
-	_ "embed"
+	"dredgerTodos/core/log"
 	"flag"
-	"log"
 	"os"
-	"strings"
 
 	"github.com/gobeam/stringy"
 	uuid "github.com/google/uuid"
@@ -14,22 +12,18 @@ import (
 	"github.com/kelseyhightower/envconfig"
 )
 
-var (
-	// Version labels the release
-	Version string = strings.TrimSpace(version)
-	//go:embed version
-	version string
-	Service string = "todos"
-)
-
 type Config struct {
+	Debug               bool `default:"false"`
 	Service             string
-	Sid                 string   `ignored:"true"`
+	Sid                 string `ignored:"true"`
+	Name                string `default:"dredgerTodos"`
+	Title               string
 	Port                string   `default:"8080"`
 	ApiKeys             []string `default:"" split_words:"true"`
 	AuthorizationHeader string   `default:"" split_words:"true"`
 	SessionKey          string   `default:"" split_words:"true"`
 	Host                string   `ignored:"true"`
+	User                string
 	Policy              string   `default:""`
 	OpaSvc              string   `default:""`
 	Realm               string   `default:""`
@@ -47,19 +41,49 @@ type Config struct {
 	ConfigExt
 }
 
-var AppConfig Config
+var (
+	AppConfig Config
+)
 
 func init() {
-	godotenv.Load()
-
+	AppConfig.Name = os.Getenv(stringy.New("dredgerTodos_NAME").SnakeCase("?", "").ToUpper())
+	AppConfig.Host, _ = os.Hostname()
+	AppConfig.User = os.Getenv("USER")
 	sid, _ := uuid.NewUUID()
-	AppConfig = Config{Sid: sid.String(), Service: Service}
-	err := envconfig.Process(stringy.New(Service).SnakeCase("?", "").ToUpper(), &AppConfig)
-	if err != nil {
-		log.Fatal(Service, "Could not parse config")
+	AppConfig.Sid = sid.String()
+
+	// parse command line arguments
+	flag.StringVar(&AppConfig.Port, "port", AppConfig.Port, "AppConfig.Port to listen by the server")
+	flag.StringVar(&AppConfig.Port, "p", AppConfig.Port, "AppConfig.Port to listen by the server")
+	flag.StringVar(&AppConfig.Name, "name", AppConfig.Name, "Name of the service")
+	flag.StringVar(&AppConfig.Name, "n", AppConfig.Name, "Name of the service")
+	flag.BoolVar(&AppConfig.Debug, "d", AppConfig.Debug, "enable debugging level for logging")
+
+	if AppConfig.Name == "" {
+		AppConfig.Name = AppInfo.Service
+	}
+	if AppConfig.Title == "" {
+		AppConfig.Title = AppConfig.Name
 	}
 
-	AppConfig.Host, _ = os.Hostname()
-	flag.StringVar(&AppConfig.Port, "p", AppConfig.Port, "port of the service")
+	log.Setup(AppConfig.Name, AppInfo.Service, AppConfig.LogFile, AppConfig.Debug)
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Debug().Err(err).Msg("Didn't found .env file")
+	}
+
+	err = envconfig.Process(stringy.New(AppConfig.Name).SnakeCase("?", "").ToUpper(), &AppConfig)
+	if err != nil {
+		log.Fatal().Err(err).Str("name", stringy.New(AppConfig.Name).SnakeCase("?", "").ToUpper()).Msg("Couldn't read environment settings")
+	}
+
 	flag.Parse()
+	log.Setup(AppConfig.Name, AppInfo.Service, AppConfig.LogFile, AppConfig.Debug)
+	if AppConfig.SessionKey == "" {
+		AppConfig.SessionKey = AppConfig.Name
+	}
+
+	log.Debug().Str("name", AppConfig.Name).Any("environment", AppConfig).Msg("Got environment")
+	AppInfo.Name = AppConfig.Name
 }

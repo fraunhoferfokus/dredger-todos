@@ -54,6 +54,12 @@ paths:
             text/css:
               schema:
                 type: string
+        "404":
+          description: The given stylesheet was not found
+          content:
+            text/plain:
+              schema:
+                type: string
   /js/{script}:
     get:
       summary: Returns the a javascript file
@@ -71,6 +77,12 @@ paths:
           description: The content of the javascript file
           content:
             text/javascript:
+              schema:
+                type: string
+        "404":
+          description: The given Javascipt file was not found
+          content:
+            text/plain:
               schema:
                 type: string
   /todos:
@@ -168,6 +180,18 @@ paths:
           description: deliver all properties like service name and version
           content:
             application/json:
+              schema:
+                type: string
+  /robots.txt:
+    get:
+      summary: return robots.txt to restrict web crawlers
+      tags:
+        - builtin
+      responses:
+        "200":
+          description: deliver robots.txt
+          content:
+            text/plain:
               schema:
                 type: string
 

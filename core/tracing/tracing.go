@@ -1,8 +1,8 @@
 package tracing
 
 import (
-	"todos/core"
-	"todos/core/log"
+	"dredgerTodos/core"
+	"dredgerTodos/core/log"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/jaeger"

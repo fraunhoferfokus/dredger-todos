@@ -2,8 +2,8 @@
 package middleware
 
 import (
+	"dredgerTodos/core"
 	"net/http"
-	"todos/core"
 
 	"github.com/labstack/echo/v4"
 )

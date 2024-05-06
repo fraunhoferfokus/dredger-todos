@@ -2,9 +2,9 @@
 package rest
 
 import (
-	"todos/core/log"
-	"todos/core/tracing"
-	"todos/web/pages"
+	"dredgerTodos/core/log"
+	"dredgerTodos/core/tracing"
+	"dredgerTodos/web/pages"
 
 	"net/http"
 

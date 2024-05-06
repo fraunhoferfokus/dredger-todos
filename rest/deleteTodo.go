@@ -2,10 +2,10 @@
 package rest
 
 import (
-	"todos/core/log"
-	"todos/core/tracing"
-	"todos/usecases"
-	"todos/web/pages"
+	"dredgerTodos/core/log"
+	"dredgerTodos/core/tracing"
+	"dredgerTodos/usecases"
+	"dredgerTodos/web/pages"
 
 	"net/http"
 	"strconv"

@@ -11,8 +11,8 @@ import "io"
 import "bytes"
 
 import (
+	"dredgerTodos/core"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
-	"todos/core"
 )
 
 // ToDo: send event

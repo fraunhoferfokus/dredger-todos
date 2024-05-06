@@ -2,9 +2,9 @@
 package rest
 
 import (
-	// "todos/rest/middleware"
-	"todos/core"
-	"todos/core/log"
+	// "dredgerTodos/rest/middleware"
+	"dredgerTodos/core"
+	"dredgerTodos/core/log"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/sessions"
@@ -56,20 +56,26 @@ func NewHandler(e *echo.Echo) {
 	//         }
 	//     }
 
-	// Operations for: "/readyz"
-	g.GET("/readyz", GetReady)
-
-	// Operations for: "/infoz"
-	g.GET("/infoz", GetInfo)
-
-	// Operations for: "/todos"
-	g.GET("/todos", Todos)
-
 	// Operations for: "/todos/done/:id"
 	g.GET("/todos/done/:id", DoneTodo)
 
 	// Operations for: "/todos/:id"
 	g.DELETE("/todos/:id", DeleteTodo)
+
+	// Operations for: "/"
+	g.GET("/", Root)
+
+	// Operations for: "/infoz"
+	g.GET("/infoz", GetInfo)
+
+	// Operations for: "/robots.txt"
+	g.GET("/robots.txt", GetRobots)
+
+	// Operations for: "/readyz"
+	g.GET("/readyz", GetReady)
+
+	// Operations for: "/todos/add"
+	g.POST("/todos/add", AddTodo)
 
 	// Operations for: "/css/:styleSheet"
 
@@ -78,12 +84,9 @@ func NewHandler(e *echo.Echo) {
 
 	// Operations for: "/js/:script"
 
+	// Operations for: "/todos"
+	g.GET("/todos", Todos)
+
 	// Operations for: "/livez"
 	g.GET("/livez", GetLive)
-
-	// Operations for: "/todos/add"
-	g.POST("/todos/add", AddTodo)
-
-	// Operations for: "/"
-	g.GET("/", Root)
 }
