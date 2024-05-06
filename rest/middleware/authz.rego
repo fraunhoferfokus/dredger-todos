@@ -1,4 +1,4 @@
-package todos.authz
+package dredgerTodos.authz
 
 default allowEntrypoint = true
 default allowAccess = true

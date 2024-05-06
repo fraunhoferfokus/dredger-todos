@@ -15,8 +15,8 @@ import (
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
 
-	"todos/core"
-	"todos/core/log"
+	"dredgerTodos/core"
+	"dredgerTodos/core/log"
 )
 
 var (
@@ -29,6 +29,7 @@ var (
 // Default values
 func init() {
 	if core.AppConfig.Policy == "" {
+		log.Info().Msg("use default policy")
 		core.AppConfig.Policy = authz
 	}
 	if core.AppConfig.Realm == "" {
@@ -86,14 +87,17 @@ func checkAuthorization(authorizationHeader string) (string, bool) {
 	}
 
 	if strings.ToLower(parts[0]) != "basic" {
+		log.Debug().Msg("No basic authorisation")
 		return "", false
 	}
 	token, err := base64.StdEncoding.DecodeString(parts[1])
 	if err != nil {
+		log.Debug().Msg("Failed to decode the authorisation token")
 		return "", false
 	}
 	tokenParts := strings.Split(string(token), ":")
 	if len(tokenParts) != 2 {
+		log.Debug().Msg("Authorisation token to short")
 		return "", false
 	}
 	user := tokenParts[0]
@@ -127,7 +131,7 @@ type OpaResult struct {
 
 func checkPolicyLocal(req *http.Request, rule string, input Input) bool {
 	query := rego.New(
-		rego.Query("data.todos.authz."+rule),
+		rego.Query("data.dredgerTodos.authz."+rule),
 		rego.Compiler(policyCompiler),
 		rego.Input(input),
 	)
@@ -154,7 +158,7 @@ func checkPolicyOpaSvc(req *http.Request, rule string, input Input) bool {
 		return false
 	}
 	buf := bytes.NewReader(jsonData)
-	resp, err := http.Post("http://"+core.AppConfig.OpaSvc+"/v1/data/todos/authz/"+rule, "application/json", buf)
+	resp, err := http.Post("http://"+core.AppConfig.OpaSvc+"/v1/data/dredgerTodos/authz/"+rule, "application/json", buf)
 	if err != nil {
 		log.Error().Err(err).Str("rule", rule).Msg("Calling policy check failed")
 		return false
@@ -184,7 +188,7 @@ func checkPolicy(c echo.Context) Action {
 	// extract input from request
 	authorization := req.Header.Get(core.AppConfig.AuthorizationHeader)
 	role, authorized := checkAuthorization(authorization)
-	if !authorized && (core.AppConfig.OpaSvc != "" || core.AppConfig.Policy != "") && (core.AppConfig.ParticipantUser != "" || core.AppConfig.StaffUser != "") {
+	if !authorized && core.AppConfig.OpaSvc == "" && core.AppConfig.Policy == "" && (core.AppConfig.ParticipantUser != "" || core.AppConfig.StaffUser != "") {
 		log.Debug().Str("authorization", authorization).Msg("Authorization failed")
 		return Authorize
 	}

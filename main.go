@@ -3,13 +3,13 @@ package main
 
 import (
 	"context"
+	"dredgerTodos/core"
+	"dredgerTodos/core/log"
+	"dredgerTodos/core/tracing"
+	"dredgerTodos/rest"
+	"dredgerTodos/rest/middleware"
+	"dredgerTodos/web"
 	"embed"
-	"todos/core"
-	"todos/core/log"
-	"todos/core/tracing"
-	"todos/rest"
-	"todos/rest/middleware"
-	"todos/web"
 
 	"github.com/labstack/echo/v4"
 	echoMiddleware "github.com/labstack/echo/v4/middleware"
@@ -20,7 +20,7 @@ import (
 var embeddedFS embed.FS
 
 func main() {
-	// ToDo: Add vasic command line options as _-n_/_-name_ and _-d_/_-debug_ using flags
+	// ToDo: Add basic command line options as _-n_/_-name_ and _-d_/_-debug_ using flags
 
 	log.Info().Str("svc", core.AppConfig.Service).Msg("Starting service")
 

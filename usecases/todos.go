@@ -1,7 +1,7 @@
 package usecases
 
 import (
-	"todos/entities"
+	"dredgerTodos/entities"
 )
 
 // Todos for each session

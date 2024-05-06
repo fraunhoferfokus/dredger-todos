@@ -21,7 +21,7 @@ run: build
     TODOS_SESSION_KEY={{sessionkey}} go run . -p {{port}}
 
 generate:
-	dredger generate -o . -n {{program}}
+	dredger generate OpenAPI.yaml -o . -f -n dredgerTodos
 
 sbom-build:
 	GOARCH=amd64 GOOS=linux cyclonedx-gomod app -output linux-amd64.bom.xml

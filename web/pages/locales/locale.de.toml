@@ -2,3 +2,6 @@
 Languages = "Sprache"
 en = "Englisch"
 de = "Deutsch"
+todos = "Todos"
+task = "Aufgaben"
+add = "Hinzufügen"

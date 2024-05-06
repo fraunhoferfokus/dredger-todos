@@ -1,7 +1,7 @@
 package pages
 
 import (
-    "github.com/nicksnyder/go-i18n/v2/i18n"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
 templ Index(lzr *i18n.Localizer) {
@@ -13,18 +13,18 @@ templ Index(lzr *i18n.Localizer) {
 			<title>{ localize(lzr,"todos") }</title>
 			<link rel="stylesheet" href="css/pico.min.css"/>
 			<!-- link rel="stylesheet" href="css/simple.min.css"/ -->
-			<script src="/js/htmx.min.js"></script>
+			<script src="js/htmx.min.js"></script>
 		</head>
 		<body id="top">
-		<main class="container">
-			<header>
-				<h1>{ localize(lzr,"todos") }</h1>
-			</header>
+			<main class="container">
+				<header>
+					<h1>{ localize(lzr,"todos") }</h1>
+				</header>
 				<div id="form">
 					<form hx-post="todos/add" hx-target="#todos">
 						<input type="text" id="task" name="task"/>
 						<br/>
-						<input type="submit" value={ localize(lzr,"add") }/>
+						<input type="submit" value={ localize(lzr, "add") }/>
 					</form>
 				</div>
 				<div id="todos" hx-get="todos" hx-trigger="load"></div>

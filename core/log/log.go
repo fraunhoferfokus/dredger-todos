@@ -8,8 +8,7 @@ import (
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/rs/zerolog"
 
-	"todos/core"
-	"todos/core/log/logger"
+	"dredgerTodos/core/log/logger"
 )
 
 var log logger.ZeroLog
@@ -23,16 +22,13 @@ var Panic func() *logger.MultiEvent
 var Print func(v ...interface{})
 var Printf func(format string, v ...interface{})
 
-// instance name of the service
-var Name string
-
 // initial setup
 func init() {
-	Setup(false)
+	Setup("dredgerTodos", "dredgerTodos", "", false)
 }
 
-// Setup the logger with or without debugging
-func Setup(debug bool) {
+// Setup the logger
+func Setup(name string, service string, logFilename string, debug bool) {
 	// the multi logger
 	log = logger.ZeroLog{}
 
@@ -40,29 +36,29 @@ func Setup(debug bool) {
 	console := zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339}).
 		With().
 		Timestamp().
-		Str("service", core.Service).
-		Str("name", Name).
+		Str("service", service).
+		Str("name", name).
 		Logger()
 
 	// add rotating file logger optionally
-	if core.AppConfig.LogFile != "" {
+	if logFilename != "" {
 		log.AddLoggerWarn(&console)
 		logfile, err := rotatelogs.New(
-			core.AppConfig.LogFile+".%Y%m%d%H%M",
-			rotatelogs.WithLinkName(core.AppConfig.LogFile),
+			logFilename+".%Y%m%d%H%M",
+			rotatelogs.WithLinkName(logFilename),
 			rotatelogs.WithMaxAge(24*time.Hour),
 			rotatelogs.WithRotationTime(time.Hour),
 		)
 		if err != nil {
-			log.Error().Str("logfile", core.AppConfig.LogFile).Err(err).Msg("can't create rotating log file")
+			log.Error().Str("logfile", logFilename).Err(err).Msg("can't create rotating log file")
 			return
 		}
 		defer logfile.Close()
 		logger := zerolog.New(logfile).
 			With().
 			Timestamp().
-			Str("service", core.Service).
-			Str("name", Name).
+			Str("service", service).
+			Str("name", name).
 			Logger()
 		if debug {
 			log.AddLoggerDebug(&logger)
