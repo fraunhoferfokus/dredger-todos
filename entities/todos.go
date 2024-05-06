@@ -2,8 +2,8 @@
 package entities
 
 type ToDos struct {
-	ToDos  map[string]ToDo `json:"toDos,omitempty" yaml:"toDos,omitempty" xml:"toDos,omitempty"`
 	NextId int             `json:"nextId,omitempty" yaml:"nextId,omitempty" xml:"nextId,omitempty"`
+	ToDos  map[string]ToDo `json:"toDos,omitempty" yaml:"toDos,omitempty" xml:"toDos,omitempty"`
 }
 
 func (v *ToDos) Validate() error {
