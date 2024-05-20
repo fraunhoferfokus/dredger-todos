@@ -5,12 +5,12 @@ package pages
 
 //lint:file-ignore SA4006 This context is only used if a nested component is present.
 
-import "github.com/a-h/templ"
-import "context"
-import "io"
-import "bytes"
-
 import (
+	"bytes"
+	"context"
+	"io"
+
+	"github.com/a-h/templ"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
@@ -40,27 +40,27 @@ func Index(lzr *i18n.Localizer) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</title><link rel=\"stylesheet\" href=\"css/pico.min.css\"><!-- link rel=\"stylesheet\" href=\"css/simple.min.css\"/ --><script src=\"js/htmx.min.js\"></script></head><body id=\"top\"><main class=\"container\"><header><h1>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</title><link rel=\"stylesheet\" href=\"css/pico.min.css\"><!-- link rel=\"stylesheet\" href=\"css/simple.min.css\"/ --><script src=\"js/htmx.min.js\"></script><script src=\"js/sse.js\"></script></head><body id=\"top\"><main class=\"container\"><header><h1>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(localize(lzr, "todos"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index.templ`, Line: 21, Col: 32}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index.templ`, Line: 22, Col: 32}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h1></header><div id=\"form\"><form hx-post=\"todos/add\" hx-target=\"#todos\"><input type=\"text\" id=\"task\" name=\"task\"><br><input type=\"submit\" value=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h1></header><div hx-ext=\"sse\" sse-connect=\"/events?stream=progress\" sse-swap=\"Progress\"></div><div id=\"form\"><form hx-post=\"todos/add\" hx-target=\"#todos\"><input type=\"text\" id=\"task\" name=\"task\"><br><input type=\"submit\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(localize(lzr, "add"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index.templ`, Line: 27, Col: 55}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/pages/index.templ`, Line: 29, Col: 55}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {

@@ -22,5 +22,5 @@ var (
 )
 
 func init() {
-	AppInfo = Info{Service: "dredgerTodos", Version: Version, Name: ""}
+	AppInfo = Info{Service: "dredger-todos", Version: Version, Name: ""}
 }

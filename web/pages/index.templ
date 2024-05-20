@@ -14,12 +14,14 @@ templ Index(lzr *i18n.Localizer) {
 			<link rel="stylesheet" href="css/pico.min.css"/>
 			<!-- link rel="stylesheet" href="css/simple.min.css"/ -->
 			<script src="js/htmx.min.js"></script>
+			<script src="js/sse.js"></script>
 		</head>
 		<body id="top">
 			<main class="container">
 				<header>
 					<h1>{ localize(lzr,"todos") }</h1>
 				</header>
+				<div hx-ext="sse" sse-connect="/events?stream=progress" sse-swap="Progress"></div>
 				<div id="form">
 					<form hx-post="todos/add" hx-target="#todos">
 						<input type="text" id="task" name="task"/>

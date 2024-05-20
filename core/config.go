@@ -16,7 +16,7 @@ type Config struct {
 	Debug               bool `default:"false"`
 	Service             string
 	Sid                 string `ignored:"true"`
-	Name                string `default:"dredgerTodos"`
+	Name                string `default:"dredger-todos"`
 	Title               string
 	Port                string   `default:"8080"`
 	ApiKeys             []string `default:"" split_words:"true"`
@@ -37,7 +37,7 @@ type Config struct {
 	Tracing             bool     `default:"false"`
 	Language            string   `default:"de"`
 	Languages           []string `default:"en,de"`
-	JaegerCollector     string   `default:"" split_words:"true"`
+	UseSse              bool     `default:"false"`
 	ConfigExt
 }
 
@@ -46,7 +46,7 @@ var (
 )
 
 func init() {
-	AppConfig.Name = os.Getenv(stringy.New("dredgerTodos_NAME").SnakeCase("?", "").ToUpper())
+	AppConfig.Name = os.Getenv(stringy.New("dredger-todos_NAME").SnakeCase("?", "").ToUpper())
 	AppConfig.Host, _ = os.Hostname()
 	AppConfig.User = os.Getenv("USER")
 	sid, _ := uuid.NewUUID()
