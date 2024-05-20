@@ -56,37 +56,47 @@ func NewHandler(e *echo.Echo) {
 	//         }
 	//     }
 
-	// Operations for: "/todos/done/:id"
-	g.GET("/todos/done/:id", DoneTodo)
-
-	// Operations for: "/todos/:id"
-	g.DELETE("/todos/:id", DeleteTodo)
+	// Operations for: "/infoz"
+	g.GET("/infoz", GetInfo)
 
 	// Operations for: "/"
 	g.GET("/", Root)
 
-	// Operations for: "/infoz"
-	g.GET("/infoz", GetInfo)
+	// Operations for: "/events"
+	g.GET("/events", HandleEvents)
+	g.POST("/events", HandleEvents)
 
-	// Operations for: "/robots.txt"
-	g.GET("/robots.txt", GetRobots)
+	// Operations for: "/todos/:id"
+	g.DELETE("/todos/:id", DeleteTodo)
 
-	// Operations for: "/readyz"
-	g.GET("/readyz", GetReady)
+	// Operations for: "/todos/done/:id"
+	g.GET("/todos/done/:id", DoneTodo)
 
 	// Operations for: "/todos/add"
 	g.POST("/todos/add", AddTodo)
 
 	// Operations for: "/css/:styleSheet"
 
+	// Operations for: "/js/:script"
+
+	// Operations for: "/livez"
+	g.GET("/livez", GetLive)
+
+	// Operations for: "/readyz"
+	g.GET("/readyz", GetReady)
+
 	// Operations for: "/index.html"
 	g.GET("/index.html", Index)
-
-	// Operations for: "/js/:script"
 
 	// Operations for: "/todos"
 	g.GET("/todos", Todos)
 
-	// Operations for: "/livez"
-	g.GET("/livez", GetLive)
+	// Operations for: "/slowcall"
+	g.GET("/slowcall", SlowCall)
+
+	// Operations for: "/robots.txt"
+	g.GET("/robots.txt", GetRobots)
+
+	// Operations for: "/slowz"
+	g.GET("/slowz", Slow)
 }

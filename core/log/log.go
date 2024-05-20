@@ -24,7 +24,7 @@ var Printf func(format string, v ...interface{})
 
 // initial setup
 func init() {
-	Setup("dredgerTodos", "dredgerTodos", "", false)
+	Setup("dredger-todos", "dredger-todos", "", false)
 }
 
 // Setup the logger

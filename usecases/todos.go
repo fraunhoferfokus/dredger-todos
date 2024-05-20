@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"dredgerTodos/entities"
+	"strconv"
 )
 
 // Todos for each session
@@ -19,9 +20,9 @@ func Todos(session string) *entities.ToDos {
 }
 
 func DeleteTodo(session string, id int) {
-	Todos(session).Delete(string(id))
+	Todos(session).Delete(strconv.Itoa(id))
 }
 
 func DoneTodo(session string, id int) {
-	Todos(session).ToggleDone(string(id))
+	Todos(session).ToggleDone(strconv.Itoa(id))
 }

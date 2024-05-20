@@ -5,13 +5,13 @@ package pages
 
 //lint:file-ignore SA4006 This context is only used if a nested component is present.
 
-import "github.com/a-h/templ"
-import "context"
-import "io"
-import "bytes"
-
 import (
+	"bytes"
+	"context"
 	"dredgerTodos/core"
+	"io"
+
+	"github.com/a-h/templ"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 )
 

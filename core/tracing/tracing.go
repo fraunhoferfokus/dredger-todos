@@ -5,7 +5,6 @@ import (
 	"dredgerTodos/core/log"
 
 	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/exporters/jaeger"
 	stdout "go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
@@ -21,22 +20,12 @@ func InitTracer() (*sdktrace.TracerProvider, error) {
 	var exporter sdktrace.SpanExporter
 	var err error
 	// output traces locally on stdout
-	if core.AppConfig.JaegerCollector != "" {
-		// Create the Jaeger exporter
-		exporter, err = jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(core.AppConfig.JaegerCollector)))
-		if err != nil {
-			log.Error().Err(err).Msg("creating Jaeger tracing exporter failed")
-			return nil, err
-		}
-		log.Info().Msg("created Jaeger tracing exporter")
-	} else {
-		exporter, err = stdout.New(stdout.WithPrettyPrint())
-		if err != nil {
-			log.Error().Err(err).Msg("creating stdout tracing exporter failed")
-			return nil, err
-		}
-		log.Info().Msg("created stdout tracing exporter")
+	exporter, err = stdout.New(stdout.WithPrettyPrint())
+	if err != nil {
+		log.Error().Err(err).Msg("creating stdout tracing exporter failed")
+		return nil, err
 	}
+	log.Info().Msg("created stdout tracing exporter")
 
 	tp := sdktrace.NewTracerProvider(
 		sdktrace.WithSampler(sdktrace.ParentBased(sdktrace.AlwaysSample())),

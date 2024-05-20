@@ -10,6 +10,7 @@ import (
 	"dredgerTodos/rest/middleware"
 	"dredgerTodos/web"
 	"embed"
+	_ "embed"
 
 	"github.com/labstack/echo/v4"
 	echoMiddleware "github.com/labstack/echo/v4/middleware"
