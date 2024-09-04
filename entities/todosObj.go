@@ -1,11 +1,13 @@
 package entities
 
+import "strconv"
+
 func NewToDos() *ToDos {
 	return &ToDos{ToDos: map[string]ToDo{}, NextId: 0}
 }
 
 func (self *ToDos) Add(task string) {
-	self.ToDos[string(self.NextId)] = ToDo{Done: false, Task: task}
+	self.ToDos[strconv.Itoa(self.NextId)] = ToDo{Done: false, Task: task}
 	self.NextId += 1
 }
 

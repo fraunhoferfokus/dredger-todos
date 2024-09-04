@@ -19,6 +19,9 @@ install: build
 run: build
     go run . -p {{port}}
 
+debug: build
+    go run . -d -p {{port}}
+
 generate:
 	dredger generate OpenAPI.yaml -o . -f -n dredger-todos
 
@@ -56,3 +59,6 @@ push:
 # changes for git
 status:
     git status -s
+
+pull:
+    git pull

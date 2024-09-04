@@ -5,3 +5,7 @@ package core
 type ConfigExt struct {
 	// RequiredAndAutoSplitVar    string `default:"bar" required:"true" split_words:"true"`
 }
+
+// define custom cli flags, ...
+func init_ext() {
+}

@@ -53,6 +53,7 @@ func main() {
 	// serve default stylesheets and javascript files
 	e.StaticFS("/css/", echo.MustSubFS(web.Css, "css"))
 	e.StaticFS("/js/", echo.MustSubFS(web.Js, "js"))
+	e.StaticFS("/images/", echo.MustSubFS(web.Images, "images"))
 	e.StaticFS("/", echo.MustSubFS(web.Public, "public"))
 
 	if core.AppConfig.CertPem != "" && core.AppConfig.KeyPem != "" {

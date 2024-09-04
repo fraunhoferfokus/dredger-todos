@@ -1,8 +1,8 @@
 package pages
 
 import (
-	"fmt"
 	"dredgerTodos/entities"
+	"fmt"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
@@ -23,9 +23,9 @@ templ Todos(lzr *i18n.Localizer, todos *entities.ToDos) {
 		</tr>
 		for id, todo := range todos.Iter() {
 			<tr>
-				<td hx-get={ "todos/done/" + fmt.Sprint(id) } hx-target="#todos" hx-trigger="click">{ showDone(todo.Done) }</td>
+				<td hx-get={ "todos/done/" + fmt.Sprint(id) } hx-target="#todos" hx-trigger="click"><span style="cursor: pointer">{ showDone(todo.Done) }</span></td>
 				<td>{ todo.Task }</td>
-				<td hx-delete={ "todos/" + fmt.Sprint(id) } hx-target="#todos" hx-trigger="click">🗑️</td>
+				<td hx-delete={ "todos/" + fmt.Sprint(id) } hx-target="#todos" hx-trigger="click"><span style="cursor: pointer">🗑️</span></td>
 			</tr>
 		}
 	</table>
