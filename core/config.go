@@ -13,9 +13,9 @@ import (
 )
 
 type Config struct {
-	Debug               bool `default:"false"`
-	Version             bool `default:"false"`
-	Service             string
+	Debug               bool   `default:"false"`
+	Version             bool   `default:"false"`
+	Service             string `default:"dredger-todos"`
 	Sid                 string `ignored:"true"`
 	Name                string `default:"dredger-todos"`
 	Title               string
@@ -48,7 +48,7 @@ var (
 )
 
 func init() {
-	AppConfig.Name = os.Getenv(stringy.New("dredger-todos_NAME").SnakeCase("?", "").ToUpper())
+	AppConfig.Service = stringy.New("dredger-todos").SnakeCase("?", "").ToUpper()
 	AppConfig.Host, _ = os.Hostname()
 	AppConfig.User = os.Getenv("USER")
 	sid, _ := uuid.NewUUID()
@@ -63,7 +63,7 @@ func init() {
 	flag.BoolVar(&AppConfig.Version, "V", AppConfig.Version, "print version")
 
 	if AppConfig.Name == "" {
-		AppConfig.Name = AppInfo.Service
+		AppConfig.Name = AppConfig.Service
 	}
 	if AppConfig.Title == "" {
 		AppConfig.Title = AppConfig.Name
