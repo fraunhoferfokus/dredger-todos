@@ -37,13 +37,13 @@ func init() {
 	}
 
 	// precompile policy
-	// log.Debug().Str("policy", core.AppConfig.Policy).Msg("got policy")
+	log.Debug().Msg("Precompile rego policy")
 	var err error
 	policyCompiler, err = ast.CompileModules(map[string]string{
 		"authz.rego": core.AppConfig.Policy,
 	})
 	if err != nil {
-		log.Printf("wrong rego policy (%s)\n", err)
+		log.Error().Err(err).Msg("wrong rego policy")
 	}
 
 }
@@ -61,9 +61,17 @@ const (
 type Input map[string]interface{}
 
 func checkAuthorization(authorizationHeader string) (string, bool) {
+	log.Debug().Msg("Check authorization")
+
+	// If no user and no staff is configured, the role user is authorized by default
+	if core.AppConfig.ParticipantUser == "" && core.AppConfig.StaffUser == "" {
+		log.Debug().Msg("assign user")
+		return "user", true
+	}
 
 	parts := strings.Split(authorizationHeader, " ")
 	if len(parts) < 2 {
+		log.Debug().Msg("No authorizationHeader")
 		return "", false
 	}
 	if strings.ToLower(parts[0]) == "bearer" {
@@ -102,6 +110,7 @@ func checkAuthorization(authorizationHeader string) (string, bool) {
 	}
 	user := tokenParts[0]
 	password := tokenParts[1]
+	log.Debug().Str("user", user).Str("password", password).Msg("Basic authentication found")
 	// Check staff user
 	if core.AppConfig.StaffUser != "" && user == core.AppConfig.StaffUser {
 		if password == core.AppConfig.StaffPassword {
@@ -186,17 +195,17 @@ func checkPolicy(c echo.Context) Action {
 	}
 
 	// extract input from request
-	authorization := req.Header.Get(core.AppConfig.AuthorizationHeader)
+	authorization := req.Header.Get("Authorization")
 	role, authorized := checkAuthorization(authorization)
 	if !authorized && core.AppConfig.OpaSvc == "" && core.AppConfig.Policy == "" && (core.AppConfig.ParticipantUser != "" || core.AppConfig.StaffUser != "") {
 		log.Debug().Str("authorization", authorization).Msg("Authorization failed")
 		return Authorize
 	}
 
-	return checkAccess(req, role)
+	return checkAccess(req, role, authorized)
 }
 
-func checkAccess(req *http.Request, role string) Action {
+func checkAccess(req *http.Request, role string, authorized bool) Action {
 	input := Input{
 		"url":     req.URL.String(),
 		"method":  req.Method,
@@ -218,7 +227,7 @@ func checkAccess(req *http.Request, role string) Action {
 	}
 	if !ok {
 		log.Warn().Str("role", role).Any("url", input["url"]).Any("method", input["method"]).Any("path", input["path"]).Any("trace", input["trace"]).Any("session", input["session"]).Any("host", input["host"]).Any("who", input["who"]).Msg("Access denied")
-		if checkEntryPoint(req) == Deny {
+		if checkEntryPoint(req) == Deny && authorized {
 			return NotFound
 		}
 		return Authorize

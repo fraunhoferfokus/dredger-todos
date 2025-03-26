@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+const Service = "dredger-todos"
+
 type Info struct {
 	Service string
 	Name    string
@@ -22,5 +24,5 @@ var (
 )
 
 func init() {
-	AppInfo = Info{Service: "dredger-todos", Version: Version, Name: ""}
+	AppInfo = Info{Service: Service, Version: Version, Name: AppInfo.Name}
 }

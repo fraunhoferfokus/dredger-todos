@@ -8,6 +8,7 @@ import (
 	"github.com/r3labs/sse/v2"
 
 	"dredgerTodos/core"
+	"dredgerTodos/core/log"
 )
 
 // learn medium duration
@@ -129,11 +130,15 @@ func ProgressBootstrap(context string, f func(), labels ...string) {
 	})
 
 	// update medium duration
-	durationSum[context] += v
-	durationNb[context] += 1
-	// avoid overflow of durationNb
-	if durationNb[context] > 10000 {
-		durationSum[context] = durationSum[context] / durationNb[context]
-		durationNb[context] = 1
+	if nb := durationNb[context]; nb > 0 {
+		durationSum[context] += v
+		durationNb[context] += 1
+		// avoid overflow of durationNb
+		if durationNb[context] > 10000 {
+			durationSum[context] = durationSum[context] / durationNb[context]
+			durationNb[context] = 1
+		}
+	} else {
+		log.Error().Str("context", context).Msg("Context doesn't exist, please initialize context")
 	}
 }
