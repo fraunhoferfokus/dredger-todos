@@ -21,13 +21,13 @@ func DeleteTodo(c echo.Context) error {
 	ctx, span := tracing.Tracer.Start(ctx, "logMessage")
 	defer span.End()
 
-	log.Info().Str("traceId", span.SpanContext().TraceID().String()).Str("spanId", span.SpanContext().SpanID().String()).Str("path", "/").Msg("DeleteTodo")
-
 	session, err := getSession(c)
 	if err != nil {
 		log.Error().Err(err).Msg("DeleteTodo failed")
 		return c.NoContent(http.StatusInternalServerError)
 	}
+
+	log.Info().Str("session", session.Values["id"].(string)).Str("traceId", span.SpanContext().TraceID().String()).Str("spanId", span.SpanContext().SpanID().String()).Str("path", "/").Msg("DeleteTodo")
 
 	id, _ := strconv.Atoi(c.Param("id"))
 	ses := session.Values["id"].(string)

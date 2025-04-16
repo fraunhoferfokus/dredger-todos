@@ -13,31 +13,42 @@ import (
 )
 
 type Config struct {
-	Debug               bool `default:"false"`
-	Service             string
-	Sid                 string `ignored:"true"`
-	Name                string `default:"dredger-todos"`
+	Args                []string `ignored:"true"`
+	Debug               bool     `default:"false"`
+	Version             bool     `default:"false" ignored:"true"`
+	Service             string   `default:"dredger-todos" ignored:"true"`
+	Sid                 string   `ignored:"true"`
+	Name                string   `default:"dredger-todos"`
 	Title               string
-	Port                string   `default:"8080"`
+	PortNb              string   `default:"8080"` // Port is a reserved name in k8s
 	ApiKeys             []string `default:"" split_words:"true"`
-	AuthorizationHeader string   `default:"" split_words:"true"`
 	SessionKey          string   `default:"" split_words:"true"`
 	Host                string   `ignored:"true"`
 	User                string
-	Policy              string   `default:""`
-	OpaSvc              string   `default:""`
-	Realm               string   `default:""`
-	StaffUser           string   `default:"" split_words:"true"`
-	StaffPassword       string   `default:"" split_words:"true"`
-	ParticipantUser     string   `default:"" split_words:"true"`
-	ParticipantPassword string   `default:"" split_words:"true"`
-	CertPem             string   `default:"" split_words:"true"`
-	KeyPem              string   `default:"" split_words:"true"`
-	LogFile             string   `default:"" split_words:"true"`
-	Tracing             bool     `default:"false"`
-	Language            string   `default:"de"`
-	Languages           []string `default:"en,de"`
-	UseSse              bool     `default:"false"`
+	Policy              string            `default:""`
+	OpaSvc              string            `default:""`
+	Realm               string            `default:""`
+	StaffUser           string            `default:"" split_words:"true"`
+	StaffPassword       string            `default:"" split_words:"true"`
+	ParticipantUser     string            `default:"" split_words:"true"`
+	ParticipantPassword string            `default:"" split_words:"true"`
+	CertPem             string            `default:"" split_words:"true"`
+	KeyPem              string            `default:"" split_words:"true"`
+	LogFile             string            `default:"" split_words:"true"`
+	LokiServer          string            `default:"" split_words:"true"`
+	LokiUser            string            `default:"" split_words:"true"`
+	LokiPassword        string            `default:"" split_words:"true"`
+	LokiKey             string            `default:"" split_words:"true"`
+	LokiLabels          map[string]string `split_words:"true"`
+	LokiBuffersize      int8              `default:"10" split_words:"true"`
+	LokiMaxDelay        int               `default:"10" split_words:"true"`
+	Tracing             bool              `default:"false"`
+	Language            string            `default:"de"`
+	Languages           []string          `default:"en,de"`
+	UseSse              bool              `default:"false" split_words:"true"`
+	ProgressDuration    int               `default:"100" split_words:"true"`
+	RapidocDoc          bool              `default:"false" split_words:"true"`
+	ElementsDoc         bool              `default:"false" split_words:"true"`
 	ConfigExt
 }
 
@@ -46,27 +57,35 @@ var (
 )
 
 func init() {
-	AppConfig.Name = os.Getenv(stringy.New("dredger-todos_NAME").SnakeCase("?", "").ToUpper())
+	AppConfig.Service = Service
 	AppConfig.Host, _ = os.Hostname()
 	AppConfig.User = os.Getenv("USER")
-	sid, _ := uuid.NewUUID()
-	AppConfig.Sid = sid.String()
+	AppConfig.Sid = uuid.Must(uuid.NewV7()).String()
 
 	// parse command line arguments
-	flag.StringVar(&AppConfig.Port, "port", AppConfig.Port, "AppConfig.Port to listen by the server")
-	flag.StringVar(&AppConfig.Port, "p", AppConfig.Port, "AppConfig.Port to listen by the server")
+	flag.StringVar(&AppConfig.PortNb, "port", AppConfig.PortNb, "Port number to listen by the server")
+	flag.StringVar(&AppConfig.PortNb, "p", AppConfig.PortNb, "Port number to listen by the server")
 	flag.StringVar(&AppConfig.Name, "name", AppConfig.Name, "Name of the service")
 	flag.StringVar(&AppConfig.Name, "n", AppConfig.Name, "Name of the service")
 	flag.BoolVar(&AppConfig.Debug, "d", AppConfig.Debug, "enable debugging level for logging")
+	flag.BoolVar(&AppConfig.Version, "V", AppConfig.Version, "print version")
+
+	// extend custom flags
+	initFlags()
+
+	flag.Parse()
+	AppConfig.Args = flag.Args()
 
 	if AppConfig.Name == "" {
-		AppConfig.Name = AppInfo.Service
+		AppConfig.Name = Service
 	}
 	if AppConfig.Title == "" {
 		AppConfig.Title = AppConfig.Name
 	}
 
-	log.Setup(AppConfig.Name, AppInfo.Service, AppConfig.LogFile, AppConfig.Debug)
+	log.Setup(AppConfig.Name, Service, AppConfig.LogFile, AppConfig.LokiServer, AppConfig.LokiKey, AppConfig.LokiLabels, AppConfig.LokiBuffersize, AppConfig.LokiMaxDelay, AppConfig.Debug)
+
+	log.Debug().Str("name", AppConfig.Name).Any("environment", os.Environ()).Msg("Got environment")
 
 	err := godotenv.Load()
 	if err != nil {
@@ -79,11 +98,22 @@ func init() {
 	}
 
 	flag.Parse()
-	log.Setup(AppConfig.Name, AppInfo.Service, AppConfig.LogFile, AppConfig.Debug)
+
+	log.Setup(AppConfig.Name, Service, AppConfig.LogFile, AppConfig.LokiServer, AppConfig.LokiKey, AppConfig.LokiLabels, AppConfig.LokiBuffersize, AppConfig.LokiMaxDelay, AppConfig.Debug)
+
+	//  print app version
+	if AppConfig.Version {
+		println("version", version)
+		os.Exit(0)
+	}
+
 	if AppConfig.SessionKey == "" {
 		AppConfig.SessionKey = AppConfig.Name
 	}
 
-	log.Debug().Str("name", AppConfig.Name).Any("environment", AppConfig).Msg("Got environment")
+	log.Debug().Str("name", AppConfig.Name).Any("config", AppConfig).Msg("Got configuration")
 	AppInfo.Name = AppConfig.Name
+
+	// extend initialisation
+	initExt()
 }

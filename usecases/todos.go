@@ -19,6 +19,10 @@ func Todos(session string) *entities.ToDos {
 	return todos
 }
 
+func AddTodo(session string, task string) {
+	Todos(session).Add(task)
+}
+
 func DeleteTodo(session string, id int) {
 	Todos(session).Delete(strconv.Itoa(id))
 }

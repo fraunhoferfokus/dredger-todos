@@ -26,7 +26,7 @@ func SlowCall(c echo.Context) error {
 			log.Warn().Err(err).Msg("Slow call failed")
 		}
 	}
-	ProgressPico(f)
+	ProgressPico("", f)
 
 	// 200 => call slow for testing load bars
 	return c.String(http.StatusOK, "I'm slow.")
