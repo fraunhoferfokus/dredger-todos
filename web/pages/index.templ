@@ -1,8 +1,6 @@
 package pages
 
-import (
-	"github.com/nicksnyder/go-i18n/v2/i18n"
-)
+import "github.com/nicksnyder/go-i18n/v2/i18n"
 
 templ Index(lzr *i18n.Localizer) {
 	<!DOCTYPE html>
@@ -13,6 +11,7 @@ templ Index(lzr *i18n.Localizer) {
 			<title>{ localize(lzr,"todos") }</title>
 			<link rel="stylesheet" href="css/pico.min.css"/>
 			<!-- link rel="stylesheet" href="css/simple.min.css"/ -->
+			<link rel="stylesheet" href="css/bootstrap-icons.min.css"/>
 			<script src="js/htmx.min.js"></script>
 			<script src="js/sse.js"></script>
 		</head>
@@ -22,6 +21,9 @@ templ Index(lzr *i18n.Localizer) {
 					<h1>{ localize(lzr,"todos") }</h1>
 				</header>
 				<div hx-ext="sse" sse-connect="/events?stream=progress" sse-swap="Progress"></div>
+				<!-- form id="searchform" class="d-flex" role="search">
+					<input type="search" class="form-control" id="search" placeholder={ localize(lzr, "search") } aria-label="search" _="on keydown[key is 'Enter'] call sessionStorage.setItem('search', #search.value) then send searchFor(topic: #search.value) to .searchIt then call event.preventDefault() then call #searchform.reset()"/>
+				</form -->
 				<div id="form">
 					<form hx-post="todos/add" hx-target="#todos">
 						<input type="text" id="task" name="task"/>

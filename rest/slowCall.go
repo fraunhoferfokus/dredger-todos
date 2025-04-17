@@ -2,6 +2,7 @@
 package rest
 
 import (
+	"dredgerTodos/core"
 	"dredgerTodos/core/log"
 	"dredgerTodos/core/tracing"
 
@@ -21,7 +22,7 @@ func SlowCall(c echo.Context) error {
 
 	f := func() {
 		// implement your functionality best using a function from a separate file, e.g. usecases/SlowCallDo.go
-		_, err := http.Get("http://localhost:9090/slowz")
+		_, err := http.Get("http://localhost:" + core.AppConfig.PortNb + "/slowz")
 		if err != nil {
 			log.Warn().Err(err).Msg("Slow call failed")
 		}

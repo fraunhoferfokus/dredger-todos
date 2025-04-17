@@ -63,7 +63,6 @@ func NewHandler(e *echo.Echo) {
 	g.GET("/events", HandleEvents)
 	// Operations for: "/events"
 	g.POST("/events", HandleEvents)
-
 	// Operations for: "/livez"
 	g.GET("/livez", GetLive)
 
@@ -93,7 +92,6 @@ func NewHandler(e *echo.Echo) {
 
 	// Operations for: "/infoz"
 	g.GET("/infoz", GetInfo)
-
 	// Operations for: "/todos"
 	g.GET("/todos", Todos)
 

@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"dredgerTodos/core/log"
 	"dredgerTodos/entities"
 	"strconv"
 )
@@ -24,9 +25,11 @@ func AddTodo(session string, task string) {
 }
 
 func DeleteTodo(session string, id int) {
+	log.Debug().Int("key", id).Msg("Delete todo")
 	Todos(session).Delete(strconv.Itoa(id))
 }
 
 func DoneTodo(session string, id int) {
+	log.Debug().Int("key", id).Msg("Done todo")
 	Todos(session).ToggleDone(strconv.Itoa(id))
 }
