@@ -8,7 +8,7 @@ Then generate the code for the _todos_ service including the frontend code base 
 
 ## Changed files
 
-Only the following files has been adapted by the business logic and with the front end:
+Only the following files has been adapted for the business logic and the front end:
 
 -   entities/todosObj.go
 -   usecases/todos.go

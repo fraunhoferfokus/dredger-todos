@@ -18,17 +18,17 @@ func init() {
 }
 
 func getSession(c echo.Context) (*sessions.Session, error) {
-	session, err := sessionStore.Get(c.Request(), "session")
+	session, err := sessionStore.Get(c.Request(), core.AppConfig.SessionKey)
 	if err != nil || session.IsNew {
 		id := uuid.Must(uuid.NewV7()).String()
-		log.Info().Str("id", id).Msg("New session")
+		log.Info().Str("session", id).Str("id", id).Msg("New session")
 		session.Values["id"] = id
 		//
 		// set your default session state
 		//
 		err = session.Save(c.Request(), c.Response())
 		if err != nil {
-			log.Error().Err(err).Msg("writing session store failed")
+			log.Error().Err(err).Str("session", session.Values["id"].(string)).Msg("writing session store failed")
 			return nil, err
 		}
 	}
@@ -56,34 +56,27 @@ func NewHandler(e *echo.Echo) {
 	//         }
 	//     }
 
+	// Operations for: "/slowz"
+	g.GET("/slowz", Slow)
+
 	// Operations for: "/events"
 	g.GET("/events", HandleEvents)
 	// Operations for: "/events"
 	g.POST("/events", HandleEvents)
+	// Operations for: "/livez"
+	g.GET("/livez", GetLive)
 
 	// Operations for: "/robots.txt"
 	g.GET("/robots.txt", GetRobots)
 
-	// Operations for: "/livez"
-	g.GET("/livez", GetLive)
-
-	// Operations for: "/todos"
-	g.GET("/todos", Todos)
-
-	// Operations for: "/infoz"
-	g.GET("/infoz", GetInfo)
-
-	// Operations for: "/todos/:id"
-	g.DELETE("/todos/:id", DeleteTodo)
+	// Operations for: "/todos/add"
+	g.POST("/todos/add", AddTodo)
 
 	// Operations for: "/readyz"
 	g.GET("/readyz", GetReady)
 
-	// Operations for: "/todos/done/:id"
-	g.GET("/todos/done/:id", DoneTodo)
-
-	// Operations for: "/slowz"
-	g.GET("/slowz", Slow)
+	// Operations for: "/todos/:id"
+	g.DELETE("/todos/:id", DeleteTodo)
 
 	// Operations for: "/index.html"
 	g.GET("/index.html", Index)
@@ -91,11 +84,16 @@ func NewHandler(e *echo.Echo) {
 	// Operations for: "/slowcall"
 	g.GET("/slowcall", SlowCall)
 
-	// Operations for: "/todos/add"
-	g.POST("/todos/add", AddTodo)
+	// Operations for: "/todos/done/:id"
+	g.GET("/todos/done/:id", DoneTodo)
 
 	// Operations for: "/"
 	g.GET("/", Root)
+
+	// Operations for: "/infoz"
+	g.GET("/infoz", GetInfo)
+	// Operations for: "/todos"
+	g.GET("/todos", Todos)
 
 	// Call handler extensions
 	newHandlerExt(e)
