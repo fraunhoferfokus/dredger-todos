@@ -20,13 +20,13 @@ func Todos(c echo.Context) error {
 	ctx, span := tracing.Tracer.Start(ctx, "logMessage")
 	defer span.End()
 
-	log.Info().Str("traceId", span.SpanContext().TraceID().String()).Str("spanId", span.SpanContext().SpanID().String()).Str("path", "/").Msg("Todos")
-
 	session, err := getSession(c)
 	if err != nil {
-		log.Error().Err(err).Msg("Todos failed")
+		log.Error().Err(err).Str("session", session.Values["id"].(string)).Msg("Todos failed")
 		return c.NoContent(http.StatusInternalServerError)
 	}
+
+	log.Info().Str("session", session.Values["id"].(string)).Str("traceId", span.SpanContext().TraceID().String()).Str("spanId", span.SpanContext().SpanID().String()).Str("path", "/").Msg("Todos")
 
 	lzr := i18n.NewLocalizer(pages.Bundle, pages.Language(c))
 	todos := usecases.Todos(session.Values["id"].(string))

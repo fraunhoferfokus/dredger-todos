@@ -45,7 +45,7 @@ func main() {
 
 	// start echo server
 	e := echo.New()
-	e.Use(echoprometheus.NewMiddleware("dredger-todos")) // adds middleware to gather metrics
+	e.Use(echoprometheus.NewMiddleware(core.AppConfig.Service)) // adds middleware to gather metrics
 
 	e.Use(echoMiddleware.CORS())
 	e.Use(middleware.LoggerHandler)
@@ -57,10 +57,10 @@ func main() {
 
 	// serve doc
 	if core.AppConfig.ElementsDoc {
-		log.Info().Msg("Enabled Elements Doc")
+		log.Info().Msg("Enabled Elements documentation")
 		e.FileFS("/doc", "web/doc/elements.html", embeddedFS)
 	} else if core.AppConfig.RapidocDoc {
-		log.Info().Msg("Enabled Rapidoc Doc")
+		log.Info().Msg("Enabled Rapidoc documentation")
 		e.FileFS("/doc", "web/doc/rapidoc.html", embeddedFS)
 	}
 	e.FileFS("/OpenAPI.yaml", "web/doc/OpenAPI.yaml", embeddedFS)

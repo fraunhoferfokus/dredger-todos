@@ -1,3 +1,5 @@
+todos
 dredgerTodos
 .env
 .DS_Store
+*_templ.go

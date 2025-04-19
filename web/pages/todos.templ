@@ -21,11 +21,11 @@ templ Todos(lzr *i18n.Localizer, todos *entities.ToDos) {
 			<th>{ localize(lzr,"task") }</th>
 			<th></th>
 		</tr>
-		for id, todo := range todos.Iter() {
+		for _, id := range todos.Ids() {
 			<tr>
-				<td hx-get={ "todos/done/" + fmt.Sprint(id) } hx-target="#todos" hx-trigger="click"><span style="cursor: pointer">{ showDone(todo.Done) }</span></td>
-				<td>{ todo.Task }</td>
-				<td hx-delete={ "todos/" + fmt.Sprint(id) } hx-target="#todos" hx-trigger="click"><span style="cursor: pointer">🗑️</span></td>
+				<td style="cursor:pointer" hx-get={ "todos/done/" + fmt.Sprint(id) } hx-target="#todos" hx-trigger="click">{ showDone(todos.Done(id)) }</td>
+				<td>{ todos.Task(id) }</td>
+				<td style="cursor:pointer" hx-delete={ "todos/" + fmt.Sprint(id) } hx-target="#todos" hx-trigger="click">🗑️</td>
 			</tr>
 		}
 	</table>

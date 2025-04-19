@@ -20,17 +20,18 @@ func AddTodo(c echo.Context) error {
 	ctx, span := tracing.Tracer.Start(ctx, "logMessage")
 	defer span.End()
 
-	log.Info().Str("traceId", span.SpanContext().TraceID().String()).Str("spanId", span.SpanContext().SpanID().String()).Str("path", "/").Msg("AddTodo")
-
 	session, err := getSession(c)
 	if err != nil {
 		log.Error().Err(err).Msg("AddTodo failed")
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
+	log.Info().Str("session", session.Values["id"].(string)).Str("traceId", span.SpanContext().TraceID().String()).Str("spanId", span.SpanContext().SpanID().String()).Str("path", "/").Msg("AddTodo")
+
 	task := c.FormValue("task")
 	if task != "" {
-		usecases.Todos(session.Values["id"].(string)).Add(task)
+		ses := session.Values["id"].(string)
+		usecases.AddTodo(ses, task)
 	}
 	lzr := i18n.NewLocalizer(pages.Bundle, pages.Language(c))
 	todos := usecases.Todos(session.Values["id"].(string))

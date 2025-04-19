@@ -18,6 +18,8 @@ RUN adduser \
     --uid "${UID}" \
     "${USER}"
 COPY . .
+RUN go install github.com/a-h/templ/cmd/templ@latest
+RUN templ generate web/pages/*.templ
 # Fetch dependencies.
 RUN go get -d -v ./...
 # Build the binary
