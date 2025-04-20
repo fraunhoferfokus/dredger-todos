@@ -29,3 +29,7 @@ Only the following files has been adapted for the business logic and the front e
 ## Issues
 
 -   TODO: Add tests
+
+## Contributions
+
+- J. Gottschick
