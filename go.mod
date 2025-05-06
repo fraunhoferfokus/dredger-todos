@@ -1,13 +1,13 @@
 module dredgerTodos
 
-go 1.23.6
+go 1.23.8
 
 toolchain go1.24.2
 
 require (
 	github.com/BurntSushi/toml v1.5.0
-	github.com/a-h/templ v0.3.857
-	github.com/getkin/kin-openapi v0.131.0
+	github.com/a-h/templ v0.3.865
+	github.com/getkin/kin-openapi v0.132.0
 	github.com/gobeam/stringy v0.0.7
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/sessions v1.4.0
@@ -17,13 +17,13 @@ require (
 	github.com/labstack/echo/v4 v4.13.3
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/nicksnyder/go-i18n/v2 v2.6.0
-	github.com/open-policy-agent/opa v1.3.0
+	github.com/open-policy-agent/opa v1.4.2
 	github.com/r3labs/sse/v2 v2.10.0
 	github.com/rs/zerolog v1.34.0
 	go.opentelemetry.io/otel v1.35.0
 	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.35.0
 	go.opentelemetry.io/otel/sdk v1.35.0
-	golang.org/x/text v0.24.0
+	golang.org/x/text v0.25.0
 )
 
 require (
@@ -54,7 +54,7 @@ require (
 	github.com/prometheus/client_golang v1.22.0 // indirect
 	github.com/prometheus/client_model v0.6.2 // indirect
 	github.com/prometheus/common v0.63.0 // indirect
-	github.com/prometheus/procfs v0.16.0 // indirect
+	github.com/prometheus/procfs v0.16.1 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20250401214520-65e299d6c5c9 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/tchap/go-patricia/v2 v2.3.2 // indirect
@@ -66,9 +66,9 @@ require (
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
 	go.opentelemetry.io/otel/metric v1.35.0 // indirect
 	go.opentelemetry.io/otel/trace v1.35.0 // indirect
-	golang.org/x/crypto v0.37.0 // indirect
-	golang.org/x/net v0.39.0 // indirect
-	golang.org/x/sys v0.32.0 // indirect
+	golang.org/x/crypto v0.38.0 // indirect
+	golang.org/x/net v0.40.0 // indirect
+	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/time v0.11.0 // indirect
 	google.golang.org/protobuf v1.36.6 // indirect
 	gopkg.in/cenkalti/backoff.v1 v1.1.0 // indirect
