@@ -4,15 +4,19 @@
 package main
 
 import (
-	"context"
+	"dredgerTodos/async/server"
 	"dredgerTodos/core"
 	"dredgerTodos/core/log"
 	"dredgerTodos/core/tracing"
+	"embed"
+
 	"dredgerTodos/rest"
 	"dredgerTodos/rest/middleware"
+
+	"context"
 	"dredgerTodos/web"
-	"embed"
 	_ "embed"
+	"flag"
 
 	"github.com/labstack/echo-contrib/echoprometheus"
 	"github.com/labstack/echo/v4"
@@ -24,6 +28,7 @@ import (
 var embeddedFS embed.FS
 
 func main() {
+	flag.Parse()
 	log.Setup(core.AppConfig.Name, core.Service, core.AppConfig.LogFile, core.AppConfig.LokiServer, core.AppConfig.LokiKey, core.AppConfig.LokiLabels, core.AppConfig.LokiBuffersize, core.AppConfig.LokiMaxDelay, core.AppConfig.Debug)
 
 	// init Opentelemetry
@@ -55,6 +60,9 @@ func main() {
 	e.GET("/metrics", echoprometheus.NewHandler()) // adds route to serve gathered metrics
 	rest.NewHandler(e)
 
+	//start nats server
+	server.RegisterHandlers(e)
+
 	// serve doc
 	if core.AppConfig.ElementsDoc {
 		log.Info().Msg("Enabled Elements documentation")
@@ -63,6 +71,7 @@ func main() {
 		log.Info().Msg("Enabled Rapidoc documentation")
 		e.FileFS("/doc", "web/doc/rapidoc.html", embeddedFS)
 	}
+
 	e.FileFS("/OpenAPI.yaml", "web/doc/OpenAPI.yaml", embeddedFS)
 
 	// serve default stylesheets and javascript files

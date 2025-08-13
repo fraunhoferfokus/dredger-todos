@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  title: ToDo
+  title: DredgerToDos
   description: This is a ToDo application.
   version: 0.0.1
 servers:
@@ -100,7 +100,7 @@ paths:
                 type: string
   /todos/add:
     post:
-      summary: List all todo items.
+      summary: Add a todo item.
       operationId: AddTodo
       responses:
         "200":
@@ -111,7 +111,7 @@ paths:
                 type: string
   /todos/done/{id}:
     get:
-      summary: Mark todo item as Done.
+      summary: Toggle todo item as Done or not.
       operationId: DoneTodo
       parameters:
         - name: id

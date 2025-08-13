@@ -4,6 +4,8 @@ package core
 import (
 	"dredgerTodos/core/log"
 	"flag"
+
+	//"strings"
 	"os"
 
 	"github.com/gobeam/stringy"
@@ -73,7 +75,7 @@ func init() {
 	// extend custom flags
 	initFlags()
 
-	flag.Parse()
+	//    flag.Parse()
 	AppConfig.Args = flag.Args()
 
 	if AppConfig.Name == "" {
@@ -97,7 +99,7 @@ func init() {
 		log.Fatal().Err(err).Str("name", stringy.New(AppConfig.Name).SnakeCase("?", "").ToUpper()).Msg("Couldn't read environment settings")
 	}
 
-	flag.Parse()
+	//    flag.Parse()
 
 	log.Setup(AppConfig.Name, Service, AppConfig.LogFile, AppConfig.LokiServer, AppConfig.LokiKey, AppConfig.LokiLabels, AppConfig.LokiBuffersize, AppConfig.LokiMaxDelay, AppConfig.Debug)
 

@@ -30,7 +30,7 @@ debug: build
 
 # Generate code from OpenAPI.yaml
 generate:
-	dredger generate OpenAPI.yaml -o . -f -n dredger-todos
+	dredger generate OpenAPI.yaml AsyncAPI.yaml -o . -f -n dredger-todos
 
 # Build SBOM files
 sbom-build:
