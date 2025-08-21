@@ -4,7 +4,7 @@
 package main
 
 import (
-	"dredgerTodos/async/server"
+	"dredgerTodos/async"
 	"dredgerTodos/core"
 	"dredgerTodos/core/log"
 	"dredgerTodos/core/tracing"
@@ -61,7 +61,7 @@ func main() {
 	rest.NewHandler(e)
 
 	//start nats server
-	server.RegisterHandlers(e)
+	async.RegisterHandlers(e)
 
 	// serve doc
 	if core.AppConfig.ElementsDoc {

@@ -14,10 +14,12 @@ channels:
   todos:
     address: todos
     messages:
-      toDo:
-        $ref: "#/components/messages/MsgToDo"
-      id:
-        $ref: "#/components/messages/MsgId"
+      addToDo:
+        $ref: "#/components/messages/MsgAddToDo"
+      doneToDo:
+        $ref: "#/components/messages/MsgDoneToDo"
+      deleteToDo:
+        $ref: "#/components/messages/MsgDeleteToDo"
 operations:
   publishAddTodo:
     action: send
@@ -25,45 +27,45 @@ operations:
     channel:
       $ref: "#/channels/todos"
     messages:
-      - $ref: "#/channels/todos/messages/toDo"
+      - $ref: "#/channels/todos/messages/addToDo"
   receiveAddToDo:
     action: receive
     summary: Receives new todo
     channel:
       $ref: "#/channels/todos"
     messages:
-      - $ref: "#/channels/todos/messages/toDo"
+      - $ref: "#/channels/todos/messages/addToDo"
   publishDeleteTodo:
     action: send
     summary: Publishes todos and changes
     channel:
       $ref: "#/channels/todos"
     messages:
-      - $ref: "#/channels/todos/messages/id"
+      - $ref: "#/channels/todos/messages/deleteToDo"
   receiveDeleteToDo:
     action: receive
     summary: Receives new todo
     channel:
       $ref: "#/channels/todos"
     messages:
-      - $ref: "#/channels/todos/messages/id"
+      - $ref: "#/channels/todos/messages/deleteToDo"
   publishDoneTodo:
     action: send
     summary: Toggle done flag of a todo item
     channel:
       $ref: "#/channels/todos"
     messages:
-      - $ref: "#/channels/todos/messages/id"
+      - $ref: "#/channels/todos/messages/doneToDo"
   receiveDoneToDo:
     action: receive
     summary: Toggle done flag of a todo item
     channel:
       $ref: "#/channels/todos"
     messages:
-      - $ref: "#/channels/todos/messages/id"
+      - $ref: "#/channels/todos/messages/doneToDo"
 components:
   messages:
-    MsgToDo:
+    MsgAddToDo:
       name: ToDo
       title: Task to do
       summary: A single task
@@ -71,7 +73,7 @@ components:
       payload:
         type: object
         properties:
-          Listname:
+          Label:
             type: string
             description: Shared name of the task list
             example: team11
@@ -83,15 +85,30 @@ components:
             type: boolean
             description: Task was done or not
             example: false
-    MsgId:
+    MsgDoneToDo:
       name: Id
-      title: Id of a task
-      summary: The internal id of a task in a shared list
+      title: Id of the task of which to toggle the done state
+      summary: The internal id of the task in the shared list to toggle the done state
       contentType: application/json
       payload:
         type: object
         properties:
-          Listname:
+          Label:
+            type: string
+            description: Shared name of the task list
+            example: team11
+          Id:
+            type: integer
+
+    MsgDeleteToDo:
+      name: Id
+      title: Id of the task to delete
+      summary: The internal id of a task to delete in the shared list
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          Label:
             type: string
             description: Shared name of the task list
             example: team11

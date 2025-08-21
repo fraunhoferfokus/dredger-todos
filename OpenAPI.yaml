@@ -98,6 +98,17 @@ paths:
             text/html:
               schema:
                 type: string
+  /todos/label:
+    post:
+      summary: Label the todo set.
+      operationId: SetLabel
+      responses:
+        "200":
+          description: Set the label and shows the table with all current todo items
+          content:
+            text/html:
+              schema:
+                type: string
   /todos/add:
     post:
       summary: Add a todo item.

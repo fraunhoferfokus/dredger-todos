@@ -26,13 +26,6 @@ operations:
       $ref: "#/channels/todos"
     messages:
       - $ref: "#/channels/todos/messages/toDo"
-  publishDeleteTodo:
-    action: send
-    summary: Publishes todos and changes
-    channel:
-      $ref: "#/channels/todos"
-    messages:
-      - $ref: "#/channels/todos/messages/id"
   receiveAddToDo:
     action: receive
     summary: Receives new todo
@@ -40,6 +33,13 @@ operations:
       $ref: "#/channels/todos"
     messages:
       - $ref: "#/channels/todos/messages/toDo"
+  publishDeleteTodo:
+    action: send
+    summary: Publishes todos and changes
+    channel:
+      $ref: "#/channels/todos"
+    messages:
+      - $ref: "#/channels/todos/messages/id"
   receiveDeleteToDo:
     action: receive
     summary: Receives new todo

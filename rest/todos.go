@@ -4,7 +4,7 @@ package rest
 import (
 	"dredgerTodos/core/log"
 	"dredgerTodos/core/tracing"
-	"dredgerTodos/usecases"
+	"dredgerTodos/usecases/messages"
 	"dredgerTodos/web/pages"
 
 	"net/http"
@@ -29,6 +29,6 @@ func Todos(c echo.Context) error {
 	log.Info().Str("session", session.Values["id"].(string)).Str("traceId", span.SpanContext().TraceID().String()).Str("spanId", span.SpanContext().SpanID().String()).Str("path", "/").Msg("Todos")
 
 	lzr := i18n.NewLocalizer(pages.Bundle, pages.Language(c))
-	todos := usecases.Todos(session.Values["id"].(string))
+	todos := messages.Todos(session.Values["id"].(string))
 	return Render(c, http.StatusOK, pages.Todos(lzr, todos))
 }

@@ -4,7 +4,8 @@ package rest
 import (
 	"dredgerTodos/core/log"
 	"dredgerTodos/core/tracing"
-	"dredgerTodos/usecases"
+	"dredgerTodos/usecases/messages"
+	"dredgerTodos/usecases/ui"
 	"dredgerTodos/web/pages"
 
 	"net/http"
@@ -32,8 +33,8 @@ func DeleteTodo(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	ses := session.Values["id"].(string)
 
-	usecases.DeleteTodo(ses, id)
+	ui.DeleteTodo(ses, id)
 	lzr := i18n.NewLocalizer(pages.Bundle, pages.Language(c))
-	todos := usecases.Todos(ses)
+	todos := messages.Todos(ses)
 	return Render(c, http.StatusOK, pages.Todos(lzr, todos))
 }

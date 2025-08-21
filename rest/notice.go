@@ -2,15 +2,16 @@
 package rest
 
 import (
+	"dredgerTodos/sse"
 	"fmt"
 
-	"github.com/r3labs/sse/v2"
+	ssev2 "github.com/r3labs/sse/v2"
 )
 
 const bsSuccessNotice = `<div class="alert alert-success alert-dismissible fade show" role="alert">%s<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`
 
 func NoticeSuccessBootstrap(msg string) {
-	SseServer.Publish("notice", &sse.Event{
+	sse.SseServer.Publish("notice", &ssev2.Event{
 		Event: []byte("Notice"),
 		Data:  []byte(fmt.Sprintf(bsSuccessNotice, msg)),
 	})
@@ -19,7 +20,7 @@ func NoticeSuccessBootstrap(msg string) {
 const bsWarningNotice = `<div class="alert alert-warning alert-dismissible fade show" role="alert">%s<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`
 
 func NoticeWarningBootstrap(msg string) {
-	SseServer.Publish("notice", &sse.Event{
+	sse.SseServer.Publish("notice", &ssev2.Event{
 		Event: []byte("Notice"),
 		Data:  []byte(fmt.Sprintf(bsWarningNotice, msg)),
 	})
@@ -29,7 +30,7 @@ func NoticeWarningBootstrap(msg string) {
 const bsErrorNotice = `<div class="alert alert-error alert-dismissible fade show" role="alert">%s<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`
 
 func NoticeErrorBootstrap(msg string) {
-	SseServer.Publish("notice", &sse.Event{
+	sse.SseServer.Publish("notice", &ssev2.Event{
 		Event: []byte("Notice"),
 		Data:  []byte(fmt.Sprintf(bsErrorNotice, msg)),
 	})

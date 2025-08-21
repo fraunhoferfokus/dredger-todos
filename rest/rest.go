@@ -62,13 +62,13 @@ func NewHandler(e *echo.Echo) {
 	// Operations for: "/readyz"
 	g.GET("/readyz", GetReady)
 
-	// Operations for: "/slowcall"
-	g.GET("/slowcall", SlowCall)
-
 	// Operations for: "/events"
 	g.GET("/events", HandleEvents)
 	// Operations for: "/events"
 	g.POST("/events", HandleEvents)
+
+	// Operations for: "/todos/label"
+	g.POST("/todos/label", SetLabel)
 
 	// Operations for: "/"
 	g.GET("/", Root)
@@ -76,26 +76,29 @@ func NewHandler(e *echo.Echo) {
 	// Operations for: "/todos/:id"
 	g.DELETE("/todos/:id", DeleteTodo)
 
+	// Operations for: "/infoz"
+	g.GET("/infoz", GetInfo)
+
+	// Operations for: "/slowcall"
+	g.GET("/slowcall", SlowCall)
+
 	// Operations for: "/livez"
 	g.GET("/livez", GetLive)
 
 	// Operations for: "/slowz"
 	g.GET("/slowz", Slow)
 
-	// Operations for: "/infoz"
-	g.GET("/infoz", GetInfo)
-
-	// Operations for: "/todos/done/:id"
-	g.GET("/todos/done/:id", DoneTodo)
-
-	// Operations for: "/index.html"
-	g.GET("/index.html", Index)
-
 	// Operations for: "/robots.txt"
 	g.GET("/robots.txt", GetRobots)
 
 	// Operations for: "/todos"
 	g.GET("/todos", Todos)
+
+	// Operations for: "/index.html"
+	g.GET("/index.html", Index)
+
+	// Operations for: "/todos/done/:id"
+	g.GET("/todos/done/:id", DoneTodo)
 
 	// Call handler extensions
 	newHandlerExt(e)

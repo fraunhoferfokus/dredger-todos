@@ -54,6 +54,30 @@
     <tr><th>Name</th><th>Action</th><th>Channel</th><th>Description</th><th>Messages</th></tr>
     
       <tr>
+        <td>publishAddTodo</td>
+        <td>send</td>
+        <td>todos</td>
+        <td>Publishes new todo</td>
+        <td><ul><li>toDo</li></ul></td>
+      </tr>
+    
+      <tr>
+        <td>receiveAddToDo</td>
+        <td>receive</td>
+        <td>todos</td>
+        <td>Receives new todo</td>
+        <td><ul><li>toDo</li></ul></td>
+      </tr>
+    
+      <tr>
+        <td>publishDeleteTodo</td>
+        <td>send</td>
+        <td>todos</td>
+        <td>Publishes todos and changes</td>
+        <td><ul><li>id</li></ul></td>
+      </tr>
+    
+      <tr>
         <td>receiveDeleteToDo</td>
         <td>receive</td>
         <td>todos</td>
@@ -77,30 +101,6 @@
         <td><ul><li>id</li></ul></td>
       </tr>
     
-      <tr>
-        <td>publishAddTodo</td>
-        <td>send</td>
-        <td>todos</td>
-        <td>Publishes new todo</td>
-        <td><ul><li>toDo</li></ul></td>
-      </tr>
-    
-      <tr>
-        <td>publishDeleteTodo</td>
-        <td>send</td>
-        <td>todos</td>
-        <td>Publishes todos and changes</td>
-        <td><ul><li>id</li></ul></td>
-      </tr>
-    
-      <tr>
-        <td>receiveAddToDo</td>
-        <td>receive</td>
-        <td>todos</td>
-        <td>Receives new todo</td>
-        <td><ul><li>toDo</li></ul></td>
-      </tr>
-    
   </table>
 </section>
 
@@ -116,7 +116,7 @@
     
       <table>
         <tr><th>Property</th><th>Type</th></tr>
-        <tr><td>Listname</td><td>string</td></tr><tr><td>Task</td><td>string</td></tr><tr><td>Done</td><td>boolean</td></tr>
+        <tr><td>Task</td><td>string</td></tr><tr><td>Done</td><td>boolean</td></tr><tr><td>Listname</td><td>string</td></tr>
       </table>
     
   

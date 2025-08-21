@@ -12,6 +12,7 @@ import (
 	uuid "github.com/google/uuid"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
+	"github.com/nats-io/nats.go"
 )
 
 type Config struct {
@@ -26,6 +27,7 @@ type Config struct {
 	ApiKeys             []string `default:"" split_words:"true"`
 	SessionKey          string   `default:"" split_words:"true"`
 	Host                string   `ignored:"true"`
+	NatsUrl             string   `default:"" split_words:"true"`
 	User                string
 	Policy              string            `default:""`
 	OpaSvc              string            `default:""`
@@ -83,6 +85,10 @@ func init() {
 	}
 	if AppConfig.Title == "" {
 		AppConfig.Title = AppConfig.Name
+	}
+
+	if AppConfig.NatsUrl == "" {
+		AppConfig.NatsUrl = nats.DefaultURL
 	}
 
 	log.Setup(AppConfig.Name, Service, AppConfig.LogFile, AppConfig.LokiServer, AppConfig.LokiKey, AppConfig.LokiLabels, AppConfig.LokiBuffersize, AppConfig.LokiMaxDelay, AppConfig.Debug)
