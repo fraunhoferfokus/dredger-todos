@@ -18,20 +18,34 @@ templ Index(lzr *i18n.Localizer) {
 		<body id="top">
 			<main class="container">
 				<header>
-					<h1>{ localize(lzr,"todos") }</h1>
+					<h1>
+						{ localize(lzr,"todos") }
+					</h1>
 				</header>
 				<div hx-ext="sse" sse-connect="/events?stream=progress" sse-swap="Progress"></div>
+				<div id="form">
+					<form hx-post="todos/label" hx-target="#todos">
+						<fieldset role="group">
+							<input type="text" id="label" name="label" placeholder={ localize(lzr, "labelPlaceholder") }/>
+							<input type="submit" value={ localize(lzr, "label") }/>
+						</fieldset>
+					</form>
+				</div>
+				<hr/>
 				<!-- form id="searchform" class="d-flex" role="search">
 					<input type="search" class="form-control" id="search" placeholder={ localize(lzr, "search") } aria-label="search" _="on keydown[key is 'Enter'] call sessionStorage.setItem('search', #search.value) then send searchFor(topic: #search.value) to .searchIt then call event.preventDefault() then call #searchform.reset()"/>
 				</form -->
 				<div id="form">
 					<form hx-post="todos/add" hx-target="#todos">
-						<input type="text" id="task" name="task"/>
-						<br/>
-						<input type="submit" value={ localize(lzr, "add") }/>
+						<fieldset role="group">
+							<input type="text" id="task" name="task"/>
+							<input type="submit" value={ localize(lzr, "add") }/>
+						</fieldset>
 					</form>
 				</div>
-				<div id="todos" hx-get="todos" hx-trigger="load"></div>
+				<div hx-ext="sse" sse-connect="/events?stream=refresh">
+					<div id="todos" hx-get="todos" hx-trigger="load,sse:Refresh"></div>
+				</div>
 			</main>
 		</body>
 	</html>

@@ -1,0 +1,116 @@
+asyncapi: 3.0.0
+info:
+  title: DredgerTodos
+  version: 1.0.0
+  description: >-
+    A NATS-based microservice that publishes todo operations, so multiple
+    running microservice can share the todos.
+servers:
+  localNATS:
+    host: localhost:4222
+    protocol: nats
+    description: Local development NATS server
+channels:
+  todos:
+    address: todos
+    messages:
+      addToDo:
+        $ref: "#/components/messages/MsgAddToDo"
+      doneToDo:
+        $ref: "#/components/messages/MsgDoneToDo"
+      deleteToDo:
+        $ref: "#/components/messages/MsgDeleteToDo"
+operations:
+  publishAddTodo:
+    action: send
+    summary: Publishes new todo
+    channel:
+      $ref: "#/channels/todos"
+    messages:
+      - $ref: "#/channels/todos/messages/addToDo"
+  receiveAddToDo:
+    action: receive
+    summary: Receives new todo
+    channel:
+      $ref: "#/channels/todos"
+    messages:
+      - $ref: "#/channels/todos/messages/addToDo"
+  publishDeleteTodo:
+    action: send
+    summary: Publishes todos and changes
+    channel:
+      $ref: "#/channels/todos"
+    messages:
+      - $ref: "#/channels/todos/messages/deleteToDo"
+  receiveDeleteToDo:
+    action: receive
+    summary: Receives new todo
+    channel:
+      $ref: "#/channels/todos"
+    messages:
+      - $ref: "#/channels/todos/messages/deleteToDo"
+  publishDoneTodo:
+    action: send
+    summary: Toggle done flag of a todo item
+    channel:
+      $ref: "#/channels/todos"
+    messages:
+      - $ref: "#/channels/todos/messages/doneToDo"
+  receiveDoneToDo:
+    action: receive
+    summary: Toggle done flag of a todo item
+    channel:
+      $ref: "#/channels/todos"
+    messages:
+      - $ref: "#/channels/todos/messages/doneToDo"
+components:
+  messages:
+    MsgAddToDo:
+      name: ToDo
+      title: Task to do
+      summary: A single task
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          Label:
+            type: string
+            description: Shared name of the task list
+            example: team11
+          Task:
+            type: string
+            description: What to do as task
+            example: Write a cool micro service
+          Done:
+            type: boolean
+            description: Task was done or not
+            example: false
+    MsgDoneToDo:
+      name: Id
+      title: Id of the task of which to toggle the done state
+      summary: The internal id of the task in the shared list to toggle the done state
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          Label:
+            type: string
+            description: Shared name of the task list
+            example: team11
+          Id:
+            type: integer
+
+    MsgDeleteToDo:
+      name: Id
+      title: Id of the task to delete
+      summary: The internal id of a task to delete in the shared list
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          Label:
+            type: string
+            description: Shared name of the task list
+            example: team11
+          Id:
+            type: integer

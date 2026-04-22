@@ -2,16 +2,16 @@
 package rest
 
 import (
+	"dredgerTodos/sse"
+
 	"github.com/labstack/echo/v4"
-	"github.com/r3labs/sse/v2"
 )
 
-var SseServer *sse.Server
 var HandleEvents echo.HandlerFunc
 
 func init() {
-	SseServer = sse.New()
-	SseServer.CreateStream("progress")
-	SseServer.CreateStream("notice")
-	HandleEvents = echo.WrapHandler(SseServer)
+	sse.SseServer.CreateStream("progress")
+	sse.SseServer.CreateStream("notice")
+	handleEventsSvc()
+	HandleEvents = echo.WrapHandler(sse.SseServer)
 }

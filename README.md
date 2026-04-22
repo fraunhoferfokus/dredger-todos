@@ -1,35 +1,51 @@
-# README
+# dredger-todos-async
 
-This example demonstrate how use the OpenAPI generator [dredger](https://github.com/fraunhoferfokus/dredger). Create the OpenAPI.yml file, which contains all API endpoints for the todos service.
+_dredger-todos_ dient zum Demonstrieren und Testen von _dredger_. _dredger_ generiert aus OpenAPI- und AsyncAPI-Spezifikationen Go-Code, der ein Gerüst für einen Micro-Service darstellt. Entsprechend den Spezifikationen werden die definierten REST-Endpoints und publish-/subscriber-Funktionen für asynchrone Kommunikation automatisch generiert. Darüber hinaus werden auch auch Funktionalitäten generiert, die ein typischer Microservice benötigt:
 
-Then generate the code for the _todos_ service including the frontend code base using the _dredger_ API generator:
+- Konfiguration
+- Commandline
+- Sicherheitsfunktionen, wie ein Policy-Enforment-Point
+- Logging
+- Monitoring
+- Tracing
+- Nutzung von templ für HTML-Seiten und deren Lokalisierung
+- Support für HTMX, SSE
 
-    dredger generate ./OpenAPI.yaml -o . -f -n todos
 
-## Changed files
+Die Basis-Funktionalität ist es neue Aufgaben __Hinzufügen__ zu können, diese als erledigt (√) oder nicht erledigt ([]) zu markieren, sowie einzelne Aufgaben zu löschen (🗑️).
 
-Only the following files has been adapted for the business logic and the front end:
+Man kann aber Aufgabenliste auch gemeinsam editieren, d.h. mit mehreren Instanzen des Micro-Services, bspw. auf verschiedenen HTTP-Ports, bedient auf zwei oder mehr Webbrowser(-Seiten). Dazu muss man für alle Instanzen das gleiche Label __Setzen__.
 
--   entities/todosObj.go
--   usecases/todos.go
--   rest/addTodo.go
--   rest/deleteTodo.go
--   rest/doneTodo.go
--   rest/index.go
--   rest/root.go
--   rest/todos.go
--   rest/getReady.go
+## Installation
 
--   web/pages/index.templ
--   web/pages/todos.templ
--   web/pages/locales/\*
+Zuerst sollte man _dredgerTodos_ vom Quellcode installieren, wobei eine funktionierende _Go_-Umgebung und das Werkzeug _just_ vorausgesetzt werden:
 
--   .gitignore
+```bash
+just required
+just install
+```
 
-## Issues
+Nun kann man mehrere Instanzen in mehreren Shells (Terminals) starten:
 
--   TODO: Add tests
+```bash
+dredgerTodos -p 9990
+dredgerTodos -p 9991
+dredgerTodos -p 9992
+```
 
-## Contributions
+In 3 verschiedenen Browser-Fenstern kann man sich die Aufgabenlisten anschauen:
 
-- J. Gottschick
+
+```bash
+http://localhost:9990
+http://localhost:9991
+http://localhost:9992
+```
+
+Als erstes setzt man in allen Fenstern das gleiche Label. Danach kann man in einem beliebigen Fenster die gemeinsame Aufgabenliste pflegen.
+
+## Umsetzung
+
+Initial wurden die OpenAPI- und die AsyncAPI-Spezifikationen erstellt und mit `dredger  generate OpenAPI.yaml AsyncAPI.yaml -o . -f -n dredger-todos` der initiale Code generiert. Schrittweise wurden REST-Handler, Async-Publisher, Async-Subscriber und weitere Anpassungen vorgenommen. Ein besonderer Fokus bilden die _usecases_, die die Business-Logik im Kern abbilden. Der Quellcode orientiert sich generell an der _Clean Architecture_ von _Uncle Bob_.
+
+Bei den _usecases_ wird ersichtlich, dass _dredgerTodos_ eigentlich 2 Micro-Services in einem sind. Mit den REST-Services wird vor allem die Web-Oberfläche mittels HTMX realisiert. Mit SSE kann diese auch asynchron aktualisiert werden. Aktionen auf der Web-Oberfläche ändern den internen Zustand der Aufgabenliste NICHT. Stattdessen werden asynchron Messages an den Message Broker (NATS) _published_. Der andere Teil des Micro-Services hat die Messages _subscribed_ und erst beim Empfang einer Message wird der lokale Zustand der Aufgabenliste aktualisiert und ein _refresh_ der Aufgabenliste auf der Web-Seite mittels SSE signalisiert. Mittels des Session-Management können auch mehrere Nutzende (Nutzung verschiedener Browser) gleichzeitig dredgerTodos nutzen.

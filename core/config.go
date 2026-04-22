@@ -4,12 +4,15 @@ package core
 import (
 	"dredgerTodos/core/log"
 	"flag"
+
+	//"strings"
 	"os"
 
 	"github.com/gobeam/stringy"
 	uuid "github.com/google/uuid"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
+	"github.com/nats-io/nats.go"
 )
 
 type Config struct {
@@ -24,6 +27,7 @@ type Config struct {
 	ApiKeys             []string `default:"" split_words:"true"`
 	SessionKey          string   `default:"" split_words:"true"`
 	Host                string   `ignored:"true"`
+	NatsUrl             string   `default:"" split_words:"true"`
 	User                string
 	Policy              string            `default:""`
 	OpaSvc              string            `default:""`
@@ -73,7 +77,7 @@ func init() {
 	// extend custom flags
 	initFlags()
 
-	flag.Parse()
+	//    flag.Parse()
 	AppConfig.Args = flag.Args()
 
 	if AppConfig.Name == "" {
@@ -81,6 +85,10 @@ func init() {
 	}
 	if AppConfig.Title == "" {
 		AppConfig.Title = AppConfig.Name
+	}
+
+	if AppConfig.NatsUrl == "" {
+		AppConfig.NatsUrl = nats.DefaultURL
 	}
 
 	log.Setup(AppConfig.Name, Service, AppConfig.LogFile, AppConfig.LokiServer, AppConfig.LokiKey, AppConfig.LokiLabels, AppConfig.LokiBuffersize, AppConfig.LokiMaxDelay, AppConfig.Debug)
@@ -97,7 +105,7 @@ func init() {
 		log.Fatal().Err(err).Str("name", stringy.New(AppConfig.Name).SnakeCase("?", "").ToUpper()).Msg("Couldn't read environment settings")
 	}
 
-	flag.Parse()
+	//    flag.Parse()
 
 	log.Setup(AppConfig.Name, Service, AppConfig.LogFile, AppConfig.LokiServer, AppConfig.LokiKey, AppConfig.LokiLabels, AppConfig.LokiBuffersize, AppConfig.LokiMaxDelay, AppConfig.Debug)
 

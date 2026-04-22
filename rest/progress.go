@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/r3labs/sse/v2"
-
 	"dredgerTodos/core"
 	"dredgerTodos/core/log"
+	"dredgerTodos/sse"
+
+	ssev2 "github.com/r3labs/sse/v2"
 )
 
 // learn medium duration
@@ -35,7 +36,7 @@ func ProgressPico(context string, f func()) {
 	}()
 
 	v := 0
-	SseServer.Publish("progress", &sse.Event{
+	sse.SseServer.Publish("progress", &ssev2.Event{
 		Event: []byte("Progress"),
 		Data:  []byte(picoNull),
 	})
@@ -46,19 +47,19 @@ func ProgressPico(context string, f func()) {
 		case <-time.After(500 * time.Millisecond):
 			v = v + 5
 			if v > duration && v <= duration+5 {
-				SseServer.Publish("progress", &sse.Event{
+				sse.SseServer.Publish("progress", &ssev2.Event{
 					Event: []byte("Progress"),
 					Data:  []byte(picoEndless),
 				})
 			} else if v < duration {
-				SseServer.Publish("progress", &sse.Event{
+				sse.SseServer.Publish("progress", &ssev2.Event{
 					Event: []byte("Progress"),
 					Data:  []byte(fmt.Sprintf(picoProgress, v)),
 				})
 			}
 		}
 	}
-	SseServer.Publish("progress", &sse.Event{
+	sse.SseServer.Publish("progress", &ssev2.Event{
 		Event: []byte("Progress"),
 		Data:  []byte(picoEmpty),
 	})
@@ -100,7 +101,7 @@ func ProgressBootstrap(context string, f func(), labels ...string) {
 	}()
 
 	v := 0
-	SseServer.Publish("progress", &sse.Event{
+	sse.SseServer.Publish("progress", &ssev2.Event{
 		Event: []byte("Progress"),
 		Data:  []byte(bsNull),
 	})
@@ -111,20 +112,20 @@ func ProgressBootstrap(context string, f func(), labels ...string) {
 		case <-time.After(500 * time.Millisecond):
 			v = v + 5
 			if v >= duration {
-				SseServer.Publish("progress", &sse.Event{
+				sse.SseServer.Publish("progress", &ssev2.Event{
 					Event: []byte("Progress"),
 					Data:  []byte(fmt.Sprintf(bsEndless, msg)),
 				})
 			} else {
 				label := labels[(v/(duration/nbOfIntervals))+1]
-				SseServer.Publish("progress", &sse.Event{
+				sse.SseServer.Publish("progress", &ssev2.Event{
 					Event: []byte("Progress"),
 					Data:  []byte(fmt.Sprintf(bsProgress, v, v, label)),
 				})
 			}
 		}
 	}
-	SseServer.Publish("progress", &sse.Event{
+	sse.SseServer.Publish("progress", &ssev2.Event{
 		Event: []byte("Progress"),
 		Data:  []byte(bsEmpty),
 	})
