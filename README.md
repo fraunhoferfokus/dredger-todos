@@ -25,6 +25,8 @@ just required
 just install
 ```
 
+Außerdem muss lokal ein [Nats Server](https://docs.nats.io/) laufen.
+
 Nun kann man mehrere Instanzen in mehreren Shells (Terminals) starten:
 
 ```bash
